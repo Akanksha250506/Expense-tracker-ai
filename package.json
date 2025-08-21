@@ -9,19 +9,29 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.31.3",
+    "@clerk/themes": "^2.4.12",
+    "@prisma/client": "^6.14.0",
+    "chart.js": "^4.5.0",
+    "dotenv": "^17.2.1",
+    "next": "15.5.0",
+    "openai": "^5.13.1",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.0"
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
-    "@eslint/eslintrc": "^3"
+    "postcss": "^8.5.6",
+    "prisma": "^6.14.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5"
   }
 }
