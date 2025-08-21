@@ -1,8 +1,18 @@
 'use server';
 
-import { checkUser } from '@/lib/checkUser';
+import { checkUser } from '@/lib/checkuser';
 import { db } from '@/lib/db';
 import { generateExpenseInsights, AIInsight, ExpenseRecord } from '@/lib/ai';
+
+// Define the type for your database expense record
+interface Expense {
+  id: string;
+  amount: number;
+  category?: string | null;
+  text: string;
+  createdAt: Date;
+  // add other fields if needed
+}
 
 export async function getAIInsights(): Promise<AIInsight[]> {
   try {
@@ -15,7 +25,7 @@ export async function getAIInsights(): Promise<AIInsight[]> {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const expenses = await db.records.findMany({
+    const expenses: Expense[] = await db.records.findMany({
       where: {
         userId: user.clerkUserId,
         createdAt: {
@@ -52,8 +62,8 @@ export async function getAIInsights(): Promise<AIInsight[]> {
       ];
     }
 
-    // Convert to format expected by AI
-    const expenseData: ExpenseRecord[] = expenses.map((expense) => ({
+    // Explicitly type `expense` in map
+    const expenseData: ExpenseRecord[] = expenses.map((expense: Expense) => ({
       id: expense.id,
       amount: expense.amount,
       category: expense.category || 'Other',

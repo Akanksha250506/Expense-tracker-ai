@@ -15,7 +15,7 @@ async function getBestWorstExpense(): Promise<{
 
   try {
     // Fetch all records for the authenticated user
-    const records = await db.records.findMany({
+    const records: { amount: number }[] = await db.records.findMany({
       where: { userId },
       select: { amount: true }, // Fetch only the `amount` field for efficiency
     });
@@ -24,7 +24,8 @@ async function getBestWorstExpense(): Promise<{
       return { bestExpense: 0, worstExpense: 0 }; // Return 0 if no records exist
     }
 
-    const amounts = records.map((record) => record.amount);
+    // Explicitly type `record` here
+    const amounts = records.map((record: { amount: number }) => record.amount);
 
     // Calculate best and worst expense amounts
     const bestExpense = Math.max(...amounts); // Highest amount

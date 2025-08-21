@@ -14,20 +14,26 @@ async function getUserRecord(): Promise<{
   }
 
   try {
-    const records = await db.records.findMany({
+    // Explicitly type each record
+    const records: { amount: number }[] = await db.records.findMany({
       where: { userId },
+      select: { amount: true }, // Only fetch the amount field
     });
 
-    const record = records.reduce((sum, record) => sum + record.amount, 0);
+    // Type the accumulator and element in reduce
+    const record = records.reduce(
+      (sum: number, record: { amount: number }) => sum + record.amount,
+      0
+    );
 
-    // Count the number of days with valid sleep records
+    // Count the number of days with valid expense records
     const daysWithRecords = records.filter(
-      (record) => record.amount > 0
+      (record: { amount: number }) => record.amount > 0
     ).length;
 
     return { record, daysWithRecords };
   } catch (error) {
-    console.error('Error fetching user record:', error); // Log the error
+    console.error('Error fetching user record:', error);
     return { error: 'Database error' };
   }
 }

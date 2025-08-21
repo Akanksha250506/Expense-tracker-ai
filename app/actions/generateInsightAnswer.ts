@@ -1,11 +1,22 @@
 'use server';
 
-import { checkUser } from '@/lib/checkUser';
+import { checkUser } from '@/lib/checkuser';
 import { db } from '@/lib/db';
 import { generateAIAnswer, ExpenseRecord } from '@/lib/ai';
 
+// Type for your database records
+interface Expense {
+  id: string;
+  amount: number;
+  category?: string | null;
+  text: string;
+  createdAt: Date;
+  // add other fields from db.records if needed
+}
+
 export async function generateInsightAnswer(question: string): Promise<string> {
   try {
+    // Check if user is authenticated
     const user = await checkUser();
     if (!user) {
       throw new Error('User not authenticated');
@@ -15,7 +26,7 @@ export async function generateInsightAnswer(question: string): Promise<string> {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const expenses = await db.records.findMany({
+    const expenses: Expense[] = await db.records.findMany({
       where: {
         userId: user.clerkUserId,
         createdAt: {
@@ -25,11 +36,11 @@ export async function generateInsightAnswer(question: string): Promise<string> {
       orderBy: {
         createdAt: 'desc',
       },
-      take: 50, // Limit to recent 50 expenses for analysis
+      take: 50, // Limit to recent 50 expenses
     });
 
     // Convert to format expected by AI
-    const expenseData: ExpenseRecord[] = expenses.map((expense) => ({
+    const expenseData: ExpenseRecord[] = expenses.map((expense: Expense) => ({
       id: expense.id,
       amount: expense.amount,
       category: expense.category || 'Other',
